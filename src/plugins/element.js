@@ -6,6 +6,7 @@ import {
   Input,
   Row,
   Col,
+  Message
 } from 'element-ui'
 Vue.use(Button)
   .use(Form)
@@ -13,3 +14,6 @@ Vue.use(Button)
   .use(Input)
   .use(Row)
   .use(Col)
+  // .use(Message)
+  Vue.component(Message)
+  Vue.prototype.$message = Message
