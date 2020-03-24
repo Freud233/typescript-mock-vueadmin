@@ -6,7 +6,15 @@ import {
   Input,
   Row,
   Col,
-  Message
+  Message,
+  Container,
+  Header,
+  Aside,
+  Main,
+  Menu,
+  Submenu,
+  MenuItem,
+  MenuItemGroup
 } from 'element-ui'
 Vue.use(Button)
   .use(Form)
@@ -14,6 +22,15 @@ Vue.use(Button)
   .use(Input)
   .use(Row)
   .use(Col)
+  .use(Container)
+  .use(Header)
+  .use(Aside)
+  .use(Main)
+  .use(Menu)
+  .use(Submenu)
+  .use(MenuItem)
+  .use(MenuItemGroup)
   // .use(Message)
+  // 解决 message 自动弹出bug
   Vue.component(Message)
   Vue.prototype.$message = Message
