@@ -46,6 +46,7 @@ export default class Login extends Vue {
     console.log(this.loginForm);
     (this.$refs.loginFormRef as Form).resetFields();
   }
+  // 登录
   private login() {
     (this.$refs.loginFormRef as Form).validate(async val => {
       if (!val) return;

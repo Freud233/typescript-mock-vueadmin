@@ -38,5 +38,6 @@
   "exclude": [
     "node_modules"
   ],
-  "no-inferrable-types": true
+  "no-inferrable-types": true,
+  "@typescript-eslint/no-explicit-any": 0
 }

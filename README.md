@@ -12,3 +12,12 @@
    "ignore-properties"
  ]
  ```
+ 2. 代码格式化问题
+ ```js
+ 编辑器自带的格式化会自动为双引号(与 eslint 冲突)
+//  在根目录中 添加 .prettierrc 文件
+{
+  "semi": false,
+  "singleQuote": true
+}
+ ```
