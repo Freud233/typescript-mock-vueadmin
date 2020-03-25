@@ -12,22 +12,31 @@
       <!-- 主题区域 -->
       <el-container>
         <!-- 侧边栏 -->
-        <el-aside width="200px">
+        <el-aside :width="isCollapse ? '64px' : '200px'">
+          <div class="aside-btn" @click="toggleAside"> ||| </div>
           <el-menu
             default-active="2"
             class="el-menu-vertical-demo"
             background-color="#545c64"
             text-color="#fff"
             active-text-color="#ffd04b"
+            unique-opened
+            :collapse-transition="false"
+            :collapse="isCollapse"
           >
-          <!-- 一级菜单 -->
-            <el-submenu index="1">
+            <!-- 一级菜单 -->
+            <el-submenu :index="items.id + ''" v-for="items in menuList" :key="items.id">
               <template slot="title">
-                <i class="el-icon-location"></i>
-                <span>导航一</span>
+                <i :class="['iconfont', iconfont[items.id]]"></i>
+                <span>{{ items.authName }}</span>
               </template>
               <!-- 二级菜单 -->
-              <el-menu-item index="1-4-1">选项1</el-menu-item>
+              <el-menu-item :index="item.id + ''" v-for="item in items.children" :key="item.id">
+                <template slot="title">
+                  <i class="el-icon-menu"></i>
+                  <span>{{ item.authName }}</span>
+                </template>
+              </el-menu-item>
             </el-submenu>
           </el-menu>
         </el-aside>
@@ -42,15 +51,35 @@
 import { Component, Vue } from 'vue-property-decorator'
 @Component
 export default class Home extends Vue {
+  private menuList = []
+  private iconfont = {
+    101: 'iconshangpin',
+    102: 'icontijikongjian',
+    103: 'iconbaobiao',
+    125: 'iconuser',
+    145: 'iconuser1',
+  }
+  private isCollapse = false
   // 退出登录
   private signOut() {
     sessionStorage.clear()
     this.$router.push('/login')
   }
-  private async mounted() {
+  private mounted() {
+    this.getMenuList()
+  }
+  // 获取左侧菜单
+  private async getMenuList() {
     const { data } = await (this as any).$http.get('/menus')
-    console.log(data);
-    if (data.meta.status === 200) this.$message.success('获取菜单数据成功')
+    if (data.meta.status !== 200) this.$message.error(data.meta.msg)
+    this.menuList = data.data
+    console.log(this.menuList)
+  }
+  // 侧边栏折叠
+  private toggleAside() {
+    console.log(1);
+    
+    this.isCollapse = !this.isCollapse
   }
 }
 </script>
@@ -75,6 +104,23 @@ export default class Home extends Vue {
   }
   .el-aside {
     background-color: rgb(84, 92, 100);
+    .el-menu {
+      border: none;
+      .iconfont {
+        margin-right: 10px;
+      }
+      // .el-submenu__title {
+      //   padding: 0 0 -10px 0;
+      // }
+    }
+    .aside-btn {
+      height: 20px;
+      background: rgb(170, 119, 194);
+      letter-spacing: 5px;
+      font-weight: 500;
+      line-height: 20px;
+      font-size: 16px;
+    }
   }
 }
 </style>

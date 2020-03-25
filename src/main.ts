@@ -5,6 +5,8 @@ import store from './store'
 import './plugins/element'
 import './assets/css/global.css'
 import axios from 'axios'
+// 自定义图标
+import './assets/font/iconfont.css'
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
 axios.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么
