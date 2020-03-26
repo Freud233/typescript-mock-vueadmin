@@ -13,9 +13,9 @@
       <el-container>
         <!-- 侧边栏 -->
         <el-aside :width="isCollapse ? '64px' : '200px'">
-          <div class="aside-btn" @click="toggleAside"> ||| </div>
+          <div class="aside-btn" @click="toggleAside">|||</div>
           <el-menu
-            default-active="2"
+            :default-active="this.$route.path"
             class="el-menu-vertical-demo"
             background-color="#545c64"
             text-color="#fff"
@@ -23,6 +23,7 @@
             unique-opened
             :collapse-transition="false"
             :collapse="isCollapse"
+            router
           >
             <!-- 一级菜单 -->
             <el-submenu :index="items.id + ''" v-for="items in menuList" :key="items.id">
@@ -31,7 +32,7 @@
                 <span>{{ items.authName }}</span>
               </template>
               <!-- 二级菜单 -->
-              <el-menu-item :index="item.id + ''" v-for="item in items.children" :key="item.id">
+              <el-menu-item :index="`/${item.path}`" v-for="item in items.children" :key="item.id" @click="saveRouterPath">
                 <template slot="title">
                   <i class="el-icon-menu"></i>
                   <span>{{ item.authName }}</span>
@@ -41,7 +42,9 @@
           </el-menu>
         </el-aside>
         <!-- 主题内容 -->
-        <el-main>Main</el-main>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -57,7 +60,7 @@ export default class Home extends Vue {
     102: 'icontijikongjian',
     103: 'iconbaobiao',
     125: 'iconuser',
-    145: 'iconuser1',
+    145: 'iconuser1'
   }
   private isCollapse = false
   // 退出登录
@@ -73,13 +76,14 @@ export default class Home extends Vue {
     const { data } = await (this as any).$http.get('/menus')
     if (data.meta.status !== 200) this.$message.error(data.meta.msg)
     this.menuList = data.data
-    console.log(this.menuList)
   }
   // 侧边栏折叠
   private toggleAside() {
-    console.log(1);
-    
     this.isCollapse = !this.isCollapse
+  }
+  // 保持二级菜单的高亮
+  private saveRouterPath() {
+    console.log(this.$route.path);
   }
 }
 </script>
@@ -120,6 +124,7 @@ export default class Home extends Vue {
       font-weight: 500;
       line-height: 20px;
       font-size: 16px;
+      cursor: pointer;
     }
   }
 }

@@ -14,7 +14,16 @@ import {
   Menu,
   Submenu,
   MenuItem,
-  MenuItemGroup
+  MenuItemGroup,
+  Breadcrumb,
+  BreadcrumbItem,
+  Card,
+  Table,
+  TableColumn,
+  Switch,
+  Tooltip,
+  Pagination,
+  Dialog
 } from 'element-ui'
 Vue.use(Button)
   .use(Form)
@@ -30,6 +39,15 @@ Vue.use(Button)
   .use(Submenu)
   .use(MenuItem)
   .use(MenuItemGroup)
+  .use(Breadcrumb)
+  .use(BreadcrumbItem)
+  .use(Card)
+  .use(Table)
+  .use(TableColumn)
+  .use(Switch)
+  .use(Tooltip)
+  .use(Pagination)
+  .use(Dialog)
   // .use(Message)
   // 解决 message 自动弹出bug
   Vue.component(Message)

@@ -39,5 +39,5 @@
     "node_modules"
   ],
   "no-inferrable-types": true,
-  "@typescript-eslint/no-explicit-any": 0
+  "@typescript-eslint/no-explicit-any": 0,
 }
