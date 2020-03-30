@@ -44,7 +44,6 @@
         </el-table-column>
         <el-table-column prop="status" label="操作" width="180px">
           <template slot-scope="scope">
-            {{scope.row}}
             <el-tooltip
               class="item"
               effect="dark"
@@ -52,7 +51,12 @@
               content="修改角色"
               placement="top-start"
             >
-              <el-button type="primary" size="mini" icon="el-icon-edit"></el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                icon="el-icon-edit"
+                @click="showEditEditUser(scope.row.id)"
+              ></el-button>
             </el-tooltip>
             <el-tooltip
               class="item"
@@ -80,27 +84,65 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="queryUsers.pagenum"
-        :page-sizes="[1, 2, 4, 6]"
+        :page-sizes="[1, 2, 4, 10]"
         :page-size="queryUsers.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
       ></el-pagination>
     </el-card>
-    <!-- dialog 对话框 -->
-    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+    <!-- 添加 用户对话框 -->
+    <el-dialog title="添加用户" :visible.sync="dialogVisible" width="50%" @close="addFormClose">
       <el-form
-        :model="dialogUserInfo"
-  
-        label-width="100px"
+        :model="addUserForm"
+        :rules="addUserFormRules"
+        ref="addUserFormRef"
+        label-width="70px"
         class="demo-ruleForm"
       >
-        <el-form-item label="活动名称" prop="name">
-          <el-input v-model="dialogUserInfo.name"></el-input>
+        <el-form-item label="姓名" prop="username">
+          <el-input v-model="addUserForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input type="password" v-model="addUserForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="addUserForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="mobile">
+          <el-input v-model="addUserForm.mobile"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="addUser">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 修改 用户对话框 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisibleEditUser"
+      width="50%"
+      @close="editUserFormClose"
+    >
+      <el-form
+        :model="editUserInfo"
+        label-width="70px"
+        ref="editUserFormRef"
+        :rules="addUserFormRules"
+      >
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="editUserInfo.username" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="editUserInfo.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机" prop="mobile">
+          <el-input v-model="editUserInfo.mobile"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisibleEditUser = false">取 消</el-button>
+        <el-button type="primary" @click="editUser">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -108,6 +150,10 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { Form } from 'element-ui'
+// declare module '@/views/HomeUsers' {
+
+// }
 @Component
 export default class HomeUsers extends Vue {
   private queryUsers = {
@@ -115,15 +161,66 @@ export default class HomeUsers extends Vue {
     pagenum: 1,
     pagesize: 2
   }
-  private dialogUserInfo = {
-    name: ''
+  private addUserForm = {
+    username: '12311',
+    password: '123',
+    email: '224@qq.com',
+    mobile: '13575676767'
   }
+
+  private editUserInfo = {}
   private total = 0
   private usersInfo = {}
+  // 校验邮箱正则
+  private checkUserEmail = (
+    rule: object,
+    value: string,
+    callback: any
+  ): void => {
+    if (!value) return callback(new Error('邮箱不能为空'))
+    const reg = /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/
+    if (reg.test(value)) {
+      return callback()
+    }
+    callback(new Error('邮箱不合法'))
+  }
+  // 手机号验证
+  private checkUserMobile = (
+    rule: object,
+    value: string,
+    callback: any
+  ): void => {
+    if (!value) return callback(new Error('手机号不能为空'))
+    const reg = /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/
+    if (reg.test(value)) {
+      return callback()
+    }
+    callback(new Error('手机不合法'))
+  }
+  private addUserFormRules = {
+    username: [
+      { required: true, message: '请输入用户名', trigger: 'blur' },
+      { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+    ],
+    password: [
+      { required: true, message: '请输入密码', trigger: 'blur' },
+      { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+    ],
+    email: [
+      { required: true, message: '请输入邮箱', trigger: 'blur' },
+      { validator: this.checkUserEmail, trigger: 'blur' }
+    ],
+    mobile: [
+      { required: true, message: '请输入手机号', trigger: 'blur' },
+      { validator: this.checkUserMobile, trigger: 'blur' }
+    ]
+  }
+
   private created() {
     this.getUsersList()
   }
   private dialogVisible = false
+  private dialogVisibleEditUser = false
   // 获取用户数据
   private async getUsersList() {
     const { data } = await (this as any).$http.get('/users', {
@@ -158,9 +255,51 @@ export default class HomeUsers extends Vue {
     console.log(data)
   }
   // diglog 对话框确认关闭前
-  private handleClose (done) {
-    console.log(done);
-    
+  private handleClose(done) {
+    console.log(done)
+  }
+  // 添加用户 对话框 重置数据
+  private addFormClose() {
+    (this.$refs.addUserFormRef as Form).resetFields()
+  }
+  // 添加用户 确认
+  private addUser() {
+    (this.$refs.addUserFormRef as Form).validate(async valid => {
+      if (!valid) return
+      const { data } = await (this as any).$http.post(
+        '/users',
+        this.addUserForm
+      )
+      if (data.meta.status !== 201) return this.$message.error(data.meta.msg)
+      this.$message.success(data.meta.msg)
+      this.dialogVisible = false
+      this.getUsersList()
+    })
+  }
+  // 修改用户按钮
+  private async showEditEditUser(id: number) {
+    const { data } = await (this as any).$http.get(`users/${id}`)
+    if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
+    this.editUserInfo = data.data
+    this.dialogVisibleEditUser = true
+  }
+  // 修改用户 对话框 关闭
+  private editUserFormClose() {
+    (this.$refs.editUserFormRef as Form).resetFields()
+  }
+  // 修改用户 确认
+  private  editUser() {
+    (this.$refs.editUserFormRef as Form).validate(async valid => {
+      if (!valid) return this.$message.error('格式错误')
+      const {data} = await (this as any).$http.put(
+        `users/${this.editUserInfo.id}`,
+        { email: this.editUserInfo.email, mobile: this.editUserInfo.mobile }
+      )
+      if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
+      this.dialogVisibleEditUser = false;
+      this.getUsersList()
+      this.$message.success(data.meta.msg)
+    })
   }
 }
 </script>
