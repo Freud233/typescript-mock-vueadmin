@@ -23,7 +23,8 @@ import {
   Switch,
   Tooltip,
   Pagination,
-  Dialog
+  Dialog,
+  MessageBox
 } from 'element-ui'
 Vue.use(Button)
   .use(Form)
@@ -52,3 +53,4 @@ Vue.use(Button)
   // 解决 message 自动弹出bug
   Vue.component(Message)
   Vue.prototype.$message = Message
+  Vue.prototype.$confirm = MessageBox.confirm

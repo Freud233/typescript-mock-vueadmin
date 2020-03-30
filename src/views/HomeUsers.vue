@@ -65,7 +65,7 @@
               content="删除角色"
               placement="top-start"
             >
-              <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
+              <el-button type="danger" size="mini" @click="delUser(scope.row.id)" icon="el-icon-delete"></el-button>
             </el-tooltip>
             <el-tooltip
               class="item"
@@ -300,6 +300,21 @@ export default class HomeUsers extends Vue {
       this.getUsersList()
       this.$message.success(data.meta.msg)
     })
+  }
+  // 删除用户
+  private async delUser(id: number) {
+    const delConfirmResult =await this.$confirm('此操作将永久该用户, 是否继续?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).catch(err => err)
+    if (delConfirmResult === 'cancel') return this.$message.info('已经取消')
+    const {data} =await (this as any).$http.delete(`users/${id}`)
+    console.log(data);
+    
+    if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
+    this.$message.success(data.meta.msg)
+    this.getUsersList()
   }
 }
 </script>
