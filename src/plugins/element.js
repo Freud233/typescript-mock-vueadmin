@@ -24,7 +24,8 @@ import {
   Tooltip,
   Pagination,
   Dialog,
-  MessageBox
+  MessageBox,
+  Tag
 } from 'element-ui'
 Vue.use(Button)
   .use(Form)
@@ -49,6 +50,7 @@ Vue.use(Button)
   .use(Tooltip)
   .use(Pagination)
   .use(Dialog)
+  .use(Tag)
   // .use(Message)
   // 解决 message 自动弹出bug
   Vue.component(Message)

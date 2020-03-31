@@ -1,9 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../views/Login.vue'
-import Home from '../views/Home.vue'
-import Welcome from '../components/Welcome.vue'
-import Users from '../views/HomeUsers.vue'
+import Login from '@/views/Login.vue'
+import Home from '@/views/Home.vue'
+import HomeUsers from '@/components/home/HomeUsers.vue'
+import Welcome from '@/components/Welcome.vue'
+import Rights from '@/components/rights/Rights.vue'
+import Roles from '@/components/rights/Roles.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -31,7 +33,17 @@ const routes = [
       {
         path: '/users',
         name: 'users',
-        component: Users
+        component: HomeUsers
+      },
+      {
+        path: '/rights',
+        name: 'rights',
+        component: Rights
+      },
+      {
+        path: '/roles',
+        name: 'roles',
+        component: Roles
       }
     ],
   }
