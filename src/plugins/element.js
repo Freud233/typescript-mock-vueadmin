@@ -25,7 +25,8 @@ import {
   Pagination,
   Dialog,
   MessageBox,
-  Tag
+  Tag,
+  Tree
 } from 'element-ui'
 Vue.use(Button)
   .use(Form)
@@ -51,6 +52,7 @@ Vue.use(Button)
   .use(Pagination)
   .use(Dialog)
   .use(Tag)
+  .use(Tree)
   // .use(Message)
   // 解决 message 自动弹出bug
   Vue.component(Message)

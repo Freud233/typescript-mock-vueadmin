@@ -22,7 +22,10 @@
             >
               <el-col :span="6">
                 <el-row>
-                  <el-tag closable @close="removeRolesRights(scope.row, item1.id)">{{item1.authName}}</el-tag>
+                  <el-tag
+                    closable
+                    @close="removeRolesRights(scope.row, item1.id)"
+                  >{{item1.authName}}</el-tag>
                   <i class="el-icon-caret-right"></i>
                 </el-row>
               </el-col>
@@ -36,7 +39,11 @@
                   :key="item2.id"
                 >
                   <el-col :span="8">
-                    <el-tag @close="removeRolesRights(scope.row, item2.id)" closable type="success">{{item2.authName}}</el-tag>
+                    <el-tag
+                      @close="removeRolesRights(scope.row, item2.id)"
+                      closable
+                      type="success"
+                    >{{item2.authName}}</el-tag>
                     <i class="el-icon-caret-right"></i>
                   </el-col>
                   <el-col :span="16">
@@ -61,11 +68,32 @@
           <template slot-scope="scope">
             <el-button type="primary" size="mini" icon="el-icon-edit"></el-button>
             <el-button type="success" size="mini" icon="el-icon-edit"></el-button>
-            <el-button type="danger" size="mini" icon="el-icon-setting">{{scope.row.id}}</el-button>
+            <el-button
+              type="danger"
+              size="mini"
+              icon="el-icon-setting"
+              @click="setRolesRights(scope.row)"
+            >{{scope.row.id}}</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
+    <!-- 分配权限的dialog -->
+    <el-dialog title="提示" :visible.sync="setRolesRightsDialog" width="50%">
+      <!-- 树形控件 -->
+      <el-tree
+        :default-checked-keys="defKeys"
+        default-expand-all
+        node-key="id"
+        :props="rolesTreeProps"
+        :data="rolesTree"
+        show-checkbox
+      ></el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRolesRightsDialog = false">取 消</el-button>
+        <el-button type="primary" @click="setRolesRightsDialog = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -73,14 +101,22 @@
 import { Vue, Component } from 'vue-property-decorator'
 @Component
 export default class Roles extends Vue {
+  private rolesList = []
+  private rolesTree = []
+  private setRolesRightsDialog = false
+  // 树形控件默认选中的 id
+  private defKeys = []
+  // 树形控件的属性绑定
+  private rolesTreeProps = {
+    children: 'children',
+    label: 'authName'
+  }
   private created() {
     this.getRolesList()
   }
-  private rolesList = []
   // 获取角色列表数据
   private async getRolesList() {
     const { data } = await (this as any).$http.get('/roles')
-    console.log(data)
     if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
     this.$message.success(data.meta.msg)
     this.rolesList = data.data
@@ -100,13 +136,32 @@ export default class Roles extends Vue {
       const { data } = await (this as any).$http.delete(
         `roles/${role.id}/rights/${rightId}`
       )
-      console.log(data)
       if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
       this.$message.success(data.meta.msg)
       role.children = data.data
-      // 不重新获取权限防止页面刷新
+      // 不重新获取权限数据防止删除权限后页面刷新
       // this.getRolesList()
     }
+  }
+  // 分配权限打开
+  private async setRolesRights(role: object) {
+    const { data } = await (this as any).$http.get('rights/tree')
+    if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
+    this.$message.success(data.meta.msg)
+    this.rolesTree = data.data
+    this.setRolesRightsDialog = true
+    // console.log(data.data)
+
+    this.setRolesRightsDialogDefCheck(role, this.defKeys)
+  }
+  // 获取默认选中的权限 id
+  private setRolesRightsDialogDefCheck(arr: any, defKeys: any) {
+    if (!arr.children) {
+      return defKeys.push(arr.id)
+    }
+    arr.children.forEach(item => {
+      this.setRolesRightsDialogDefCheck(item, defKeys)
+    })
   }
 }
 </script>
