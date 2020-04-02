@@ -149,7 +149,8 @@
     <el-dialog
       title="提示"
       :visible.sync="setRoles"
-      width="50%">
+      width="50%"
+      @closed="clearRolesData">
       <p>当前用户: {{ selectUsersInfo.username }}</p>
       <p>当前权限: {{ selectUsersInfo.role_name }}</p>
       <p>分配角色
@@ -360,8 +361,12 @@ export default class HomeUsers extends Vue {
     if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
     this.$message.success(data.meta.msg)
     this.setRoles = false
-    this.selectRolesId = ''
     this.getUsersList()
+  }
+  // 分配权限按钮关闭清空角色内容
+  private clearRolesData() {
+    this.selectRolesId = ''
+    this.selectUsersInfo = {}
   }
 }
 </script>
