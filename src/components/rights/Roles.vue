@@ -79,7 +79,7 @@
       </el-table>
     </el-card>
     <!-- 分配权限的dialog -->
-    <el-dialog title="提示" :visible.sync="setRolesRightsDialog" width="50%">
+    <el-dialog title="提示" @close="emptyDefKeys" :visible.sync="setRolesRightsDialog" width="50%">
       <!-- 树形控件 -->
       <el-tree
         :default-checked-keys="defKeys"
@@ -87,11 +87,12 @@
         node-key="id"
         :props="rolesTreeProps"
         :data="rolesTree"
+        ref="rolesRightsRef"
         show-checkbox
       ></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="setRolesRightsDialog = false">取 消</el-button>
-        <el-button type="primary" @click="setRolesRightsDialog = false">确 定</el-button>
+        <el-button type="primary" @click="setRolesRightsVerify()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -99,6 +100,7 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator'
+import { Tree } from 'element-ui'
 @Component
 export default class Roles extends Vue {
   private rolesList = []
@@ -106,6 +108,7 @@ export default class Roles extends Vue {
   private setRolesRightsDialog = false
   // 树形控件默认选中的 id
   private defKeys = []
+  private roleId: number;
   // 树形控件的属性绑定
   private rolesTreeProps = {
     children: 'children',
@@ -145,24 +148,41 @@ export default class Roles extends Vue {
   }
   // 分配权限打开
   private async setRolesRights(role: object) {
+    this.roleId = role.id
     const { data } = await (this as any).$http.get('rights/tree')
     if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
     this.$message.success(data.meta.msg)
     this.rolesTree = data.data
     this.setRolesRightsDialog = true
-    // console.log(data.data)
-
     this.setRolesRightsDialogDefCheck(role, this.defKeys)
   }
   // 获取默认选中的权限 id
   private setRolesRightsDialogDefCheck(arr: any, defKeys: any) {
     if (!arr.children) {
+      // this.defKeys = []
       return defKeys.push(arr.id)
     }
     arr.children.forEach(item => {
       this.setRolesRightsDialogDefCheck(item, defKeys)
     })
   }
+  // 清空默认选中id
+  private emptyDefKeys() {
+    this.defKeys = []
+  }
+  // 确定分配权限按钮
+  private async setRolesRightsVerify() {
+    const rids = [
+      ...(this.$refs.rolesRightsRef as Tree).getHalfCheckedKeys(),
+      ...(this.$refs.rolesRightsRef as Tree).getCheckedKeys()
+    ].join(',')
+    const { data } = await (this as any).$http.post(`roles/${this.roleId}/rights`, {rids})
+    if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
+    this.$message.success(data.meta.msg)
+    this.setRolesRightsDialog = false
+    this.getRolesList()
+  }
+  
 }
 </script>
 

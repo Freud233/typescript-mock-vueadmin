@@ -26,7 +26,9 @@ import {
   Dialog,
   MessageBox,
   Tag,
-  Tree
+  Tree,
+  Select,
+  Option
 } from 'element-ui'
 Vue.use(Button)
   .use(Form)
@@ -53,6 +55,8 @@ Vue.use(Button)
   .use(Dialog)
   .use(Tag)
   .use(Tree)
+  .use(Select)
+  .use(Option)
   // .use(Message)
   // 解决 message 自动弹出bug
   Vue.component(Message)

@@ -74,7 +74,7 @@
               content="分配角色"
               placement="top-start"
             >
-              <el-button type="warning" size="mini" icon="el-icon-setting"></el-button>
+              <el-button type="warning" size="mini" icon="el-icon-setting" @click="settingRoles(scope.row)"></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -145,6 +145,28 @@
         <el-button type="primary" @click="editUser">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 分配权限对话框 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="setRoles"
+      width="50%">
+      <p>当前用户: {{ selectUsersInfo.username }}</p>
+      <p>当前权限: {{ selectUsersInfo.role_name }}</p>
+      <p>分配角色
+        <el-select v-model="selectRolesId" placeholder="请选择">
+          <el-option
+            v-for="item in rolesInfo"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="setRoles = false">取 消</el-button>
+        <el-button type="primary" @click="setRolesVerity">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -167,10 +189,16 @@ export default class HomeUsers extends Vue {
     email: '224@qq.com',
     mobile: '13575676767'
   }
-
   private editUserInfo = {}
   private total = 0
   private usersInfo = {}
+  // 需要被分配的用户信息
+  private selectUsersInfo = {}
+  // 所有用户信息
+  private rolesInfo = []
+  private setRoles = false
+  // 选中的角色 id
+  private selectRolesId = ''
   // 校验邮箱正则
   private checkUserEmail = (
     rule: object,
@@ -314,6 +342,25 @@ export default class HomeUsers extends Vue {
     
     if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
     this.$message.success(data.meta.msg)
+    this.getUsersList()
+  }
+  // 分配角色打开按钮
+  private async settingRoles(role: object) {
+    this.setRoles = true
+    this.selectUsersInfo = role
+    const {data} = await (this as any).$http.get(`roles`)
+    this.rolesInfo = data.data
+    console.log(this.usersInfo, 'usersInfo');
+      if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
+      this.$message.success(data.meta.msg)
+  }
+  // 分配角色确定按钮
+  private async setRolesVerity() {
+    const { data } = await (this as any).$http.put(`users/${this.selectUsersInfo.id}/role`,{rid:this.selectRolesId})
+    if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
+    this.$message.success(data.meta.msg)
+    this.setRoles = false
+    this.selectRolesId = ''
     this.getUsersList()
   }
 }
