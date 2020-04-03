@@ -5,6 +5,10 @@ import store from './store'
 import './plugins/element'
 import './assets/css/global.css'
 import axios from 'axios'
+// 表格插件
+import ZkTable from 'vue-table-with-tree-grid'
+Vue.use(ZkTable)
+// Vue.component('tree',ZkTable)
 // 自定义图标
 import './assets/font/iconfont.css'
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'

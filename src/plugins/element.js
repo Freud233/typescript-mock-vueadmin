@@ -28,7 +28,8 @@ import {
   Tag,
   Tree,
   Select,
-  Option
+  Option,
+  Cascader
 } from 'element-ui'
 Vue.use(Button)
   .use(Form)
@@ -57,6 +58,7 @@ Vue.use(Button)
   .use(Tree)
   .use(Select)
   .use(Option)
+  .use(Cascader)
   // .use(Message)
   // 解决 message 自动弹出bug
   Vue.component(Message)

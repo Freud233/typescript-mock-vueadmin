@@ -21,3 +21,5 @@
   "singleQuote": true
 }
  ```
+ 3. Cate 中的表格用插件
+ + vue-table-with-tree-grid
