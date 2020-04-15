@@ -170,7 +170,6 @@ export default class Params extends Vue {
       this.$refs.saveTagInput.$refs.input.focus()
     })
   }
-
   // 级联选择控制只能选择第三级分类
   get cateIsSelect() {
     if (this.selectCateKeys.length === 3) return false

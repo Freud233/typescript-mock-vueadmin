@@ -7,7 +7,14 @@ import './assets/css/global.css'
 import axios from 'axios'
 // 表格插件
 import ZkTable from 'vue-table-with-tree-grid'
+// 富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+// 导入时间过滤器
+import './tools/datefilter'
 Vue.use(ZkTable)
+Vue.use(VueQuillEditor)
 // Vue.component('tree',ZkTable)
 // 自定义图标
 import './assets/font/iconfont.css'

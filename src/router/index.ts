@@ -56,6 +56,16 @@ const routes = [
         path: '/params',
         name: 'params',
         component: Params
+      },
+      {
+        path: '/goods',
+        name: 'goodslist',
+        component: (resolve: any) => (require(["@/components/goods/GoodsList.vue"], resolve))
+      },
+      {
+        path: '/goods/add',
+        name: 'addGoods',
+        component: (resolve: any) => (require(["@/components/goods/AddGoods.vue"], resolve))
       }
     ],
   }

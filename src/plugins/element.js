@@ -33,6 +33,10 @@ import {
   Alert,
   Tabs,
   TabPane,
+  Steps,
+  Step,
+  Upload
+
 } from 'element-ui'
 Vue.use(Button)
   .use(Form)
@@ -65,8 +69,11 @@ Vue.use(Button)
   .use(Alert)
   .use(Tabs)
   .use(TabPane)
-  // .use(Message)
-  // 解决 message 自动弹出bug
-  Vue.component(Message)
-  Vue.prototype.$message = Message
-  Vue.prototype.$confirm = MessageBox.confirm
+  .use(Steps)
+  .use(Step)
+  .use(Upload)
+// .use(Message)
+// 解决 message 自动弹出bug
+Vue.component(Message)
+Vue.prototype.$message = Message
+Vue.prototype.$confirm = MessageBox.confirm

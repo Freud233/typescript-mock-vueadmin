@@ -23,3 +23,6 @@
  ```
  3. Cate 中的表格用插件
  + vue-table-with-tree-grid
+ 4. 富文本编辑器
+ vue-quill-editor
+ 5. lodash   深拷贝
