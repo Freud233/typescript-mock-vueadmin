@@ -35,7 +35,9 @@ import {
   TabPane,
   Steps,
   Step,
-  Upload
+  Upload, 
+  Timeline,
+  TimelineItem,
 
 } from 'element-ui'
 Vue.use(Button)
@@ -72,6 +74,8 @@ Vue.use(Button)
   .use(Steps)
   .use(Step)
   .use(Upload)
+  .use(Timeline)
+  .use(TimelineItem)
 // .use(Message)
 // 解决 message 自动弹出bug
 Vue.component(Message)
