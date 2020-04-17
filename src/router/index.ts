@@ -71,6 +71,11 @@ const routes = [
         path: '/orders',
         name: 'Order',
         component: (resolve: any) => (require(["@/components/order/Order.vue"], resolve))
+      },
+      {
+        path: '/reports',
+        name: 'Report',
+        component: (resolve: any) => (require(['@/components/report/Report.vue'], resolve))
       }
     ],
   }
