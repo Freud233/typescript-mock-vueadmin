@@ -65,7 +65,12 @@
               content="删除角色"
               placement="top-start"
             >
-              <el-button type="danger" size="mini" @click="delUser(scope.row.id)" icon="el-icon-delete"></el-button>
+              <el-button
+                type="danger"
+                size="mini"
+                @click="delUser(scope.row.id)"
+                icon="el-icon-delete"
+              ></el-button>
             </el-tooltip>
             <el-tooltip
               class="item"
@@ -74,7 +79,12 @@
               content="分配角色"
               placement="top-start"
             >
-              <el-button type="warning" size="mini" icon="el-icon-setting" @click="settingRoles(scope.row)"></el-button>
+              <el-button
+                type="warning"
+                size="mini"
+                icon="el-icon-setting"
+                @click="settingRoles(scope.row)"
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -146,11 +156,7 @@
       </span>
     </el-dialog>
     <!-- 分配权限对话框 -->
-    <el-dialog
-      title="提示"
-      :visible.sync="setRoles"
-      width="50%"
-      @closed="clearRolesData">
+    <el-dialog title="提示" :visible.sync="setRoles" width="50%" @closed="clearRolesData">
       <p>当前用户: {{ selectUsersInfo.username }}</p>
       <p>当前权限: {{ selectUsersInfo.role_name }}</p>
       <p>分配角色
@@ -159,8 +165,8 @@
             v-for="item in rolesInfo"
             :key="item.id"
             :label="item.roleName"
-            :value="item.id">
-          </el-option>
+            :value="item.id"
+          ></el-option>
         </el-select>
       </p>
       <span slot="footer" class="dialog-footer">
@@ -190,11 +196,11 @@ export default class HomeUsers extends Vue {
     email: '224@qq.com',
     mobile: '13575676767'
   }
-  private editUserInfo = {}
+  private editUserInfo: any = {}
   private total = 0
   private usersInfo = {}
   // 需要被分配的用户信息
-  private selectUsersInfo = {}
+  private selectUsersInfo: any = {}
   // 所有用户信息
   private rolesInfo = []
   private setRoles = false
@@ -283,10 +289,6 @@ export default class HomeUsers extends Vue {
     this.$message.success(data.meta.msg)
     console.log(data)
   }
-  // diglog 对话框确认关闭前
-  private handleClose(done) {
-    console.log(done)
-  }
   // 添加用户 对话框 重置数据
   private addFormClose() {
     (this.$refs.addUserFormRef as Form).resetFields()
@@ -317,30 +319,34 @@ export default class HomeUsers extends Vue {
     (this.$refs.editUserFormRef as Form).resetFields()
   }
   // 修改用户 确认
-  private  editUser() {
+  private editUser() {
     (this.$refs.editUserFormRef as Form).validate(async valid => {
       if (!valid) return this.$message.error('格式错误')
-      const {data} = await (this as any).$http.put(
+      const { data } = await (this as any).$http.put(
         `users/${this.editUserInfo.id}`,
         { email: this.editUserInfo.email, mobile: this.editUserInfo.mobile }
       )
       if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
-      this.dialogVisibleEditUser = false;
+      this.dialogVisibleEditUser = false
       this.getUsersList()
       this.$message.success(data.meta.msg)
     })
   }
   // 删除用户
   private async delUser(id: number) {
-    const delConfirmResult =await this.$confirm('此操作将永久该用户, 是否继续?', '提示', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning'
-    }).catch(err => err)
+    const delConfirmResult = await this.$confirm(
+      '此操作将永久该用户, 是否继续?',
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    ).catch(err => err)
     if (delConfirmResult === 'cancel') return this.$message.info('已经取消')
-    const {data} =await (this as any).$http.delete(`users/${id}`)
-    console.log(data);
-    
+    const { data } = await (this as any).$http.delete(`users/${id}`)
+    console.log(data)
+
     if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
     this.$message.success(data.meta.msg)
     this.getUsersList()
@@ -349,15 +355,18 @@ export default class HomeUsers extends Vue {
   private async settingRoles(role: object) {
     this.setRoles = true
     this.selectUsersInfo = role
-    const {data} = await (this as any).$http.get(`roles`)
+    const { data } = await (this as any).$http.get(`roles`)
     this.rolesInfo = data.data
-    console.log(this.usersInfo, 'usersInfo');
-      if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
-      this.$message.success(data.meta.msg)
+    console.log(this.usersInfo, 'usersInfo')
+    if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
+    this.$message.success(data.meta.msg)
   }
   // 分配角色确定按钮
   private async setRolesVerity() {
-    const { data } = await (this as any).$http.put(`users/${this.selectUsersInfo.id}/role`,{rid:this.selectRolesId})
+    const { data } = await (this as any).$http.put(
+      `users/${this.selectUsersInfo.id}/role`,
+      { rid: this.selectRolesId }
+    )
     if (data.meta.status !== 200) return this.$message.error(data.meta.msg)
     this.$message.success(data.meta.msg)
     this.setRoles = false

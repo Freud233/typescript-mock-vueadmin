@@ -152,7 +152,7 @@ export default class Params extends Vue {
     this.addParamsdialogVisible = true
   }
   // 文本框确认事件
-  private handleInputConfirm(row: object) {
+  private handleInputConfirm(row: any) {
     if (row.inputValue.trim().length === 0) {
       row.inputValue = ''
       row.inputVisible = false
@@ -164,10 +164,10 @@ export default class Params extends Vue {
     row.inputVisible = false
   }
   // 文本框双击事件
-  private showInput(row: object) {
+  private showInput(row: any) {
     row.inputVisible = true
     this.$nextTick(() => {
-      this.$refs.saveTagInput.$refs.input.focus()
+      (this as any).$refs.saveTagInput.$refs.input.focus()
     })
   }
   // 级联选择控制只能选择第三级分类

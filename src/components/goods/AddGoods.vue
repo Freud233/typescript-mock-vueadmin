@@ -151,7 +151,7 @@ export default class AddGoods extends Vue {
       return false
     }
   }
-  private handlePreview(file: object) {
+  private handlePreview(file: any) {
     this.uploadSrc = file.url
     this.upLoadDialogVisible = true
     console.log(file)
@@ -171,7 +171,7 @@ export default class AddGoods extends Vue {
   onEditorReady(quill: object) {
     console.log('editor ready!', quill)
   }
-  onEditorChange({ quill, html, text }) {
+  onEditorChange({ quill, html, text }: any) {
     console.log('editor change!', quill, html, text)
     this.content = html
   }

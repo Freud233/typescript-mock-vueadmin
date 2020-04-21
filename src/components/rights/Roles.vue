@@ -125,7 +125,7 @@ export default class Roles extends Vue {
     this.rolesList = data.data
   }
   // 删除角色权限
-  private async removeRolesRights(role: object, rightId: number) {
+  private async removeRolesRights(role: any, rightId: number) {
     const removeRolesRightsResult = await this.$confirm(
       '此操作将永久删除该文件, 是否继续?',
       '提示',
@@ -147,7 +147,7 @@ export default class Roles extends Vue {
     }
   }
   // 分配权限打开
-  private async setRolesRights(role: object) {
+  private async setRolesRights(role: any) {
     this.roleId = role.id
     const { data } = await (this as any).$http.get('rights/tree')
     if (data.meta.status !== 200) return this.$message.error(data.meta.msg)

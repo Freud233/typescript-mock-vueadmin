@@ -14,8 +14,8 @@
           <el-input v-model="loginForm.password" prefix-icon="el-icon-s-home" show-password></el-input>
         </el-form-item>
         <el-row>
-          <el-button type="primary" @click="login">登录</el-button>
-          <el-button type="success" @click="resetLoginForm">重置</el-button>
+          <el-button type="primary" @click="login" name="login">登录</el-button>
+          <el-button type="success" @click="resetLoginForm" name="reset">重置</el-button>
         </el-row>
       </el-form>
     </div>
@@ -43,7 +43,6 @@ export default class Login extends Vue {
     ]
   };
   private resetLoginForm() {
-    console.log(this.loginForm);
     (this.$refs.loginFormRef as Form).resetFields();
   }
   // 登录
